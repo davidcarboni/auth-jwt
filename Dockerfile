@@ -22,4 +22,4 @@ RUN groupadd -r python && \
     useradd -r -M -g python python
 USER python
 
-CMD ls -lah
+CMD python app.py
