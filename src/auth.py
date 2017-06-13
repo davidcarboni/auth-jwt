@@ -28,6 +28,11 @@ def home():
     })
 
 
+@app.route('/sign-in', methods=['POST'])
+def sign_in():
+    return jsonify(sign({'user': 'david', 'role': 'dude'}).decode("UTF8"))
+
+
 @app.route('/public-key')
 def public_key():
     """Returns the public key of this instance.
