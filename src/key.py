@@ -5,9 +5,10 @@ from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat
 
 
 # The key pair for this instance (elliptic curve ED25519)
+# TODO: confirm the curve to use. SECP256R1 generates keys as per ssh-keygen -t ecdsa ("ecdsa-sha2-nistp256")
 _key = {
     'id': uuid.uuid4(),
-    'key_pair': ec.generate_private_key(ec.SECP521R1(), default_backend())
+    'key_pair': ec.generate_private_key(ec.SECP256R1(), default_backend())
 }
 
 
@@ -26,4 +27,4 @@ def public_key():
     """Renders the public key in PEM format.
     This is used for verifying JWT token signatures.
     """
-    return _key["key_pair"].public_key().public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
+    return _key["key_pair"].public_key().public_bytes(Encoding.OpenSSH, PublicFormat.OpenSSH)
