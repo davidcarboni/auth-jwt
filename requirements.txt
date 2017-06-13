@@ -2,3 +2,4 @@ flask==0.12.2
 requests==2.16.5
 pyjwt==1.5.0
 cryptography==1.9
+gunicorn
