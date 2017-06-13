@@ -23,7 +23,7 @@ def home():
     log.debug("Decoded: " + dumps(decoded))
     return jsonify({
         'data': data,
-        'jwt': jwt,
+        'jwt': jwt.decode("UTF8"),
         'decoded': decoded
     })
 
