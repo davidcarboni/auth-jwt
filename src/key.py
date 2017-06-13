@@ -24,7 +24,8 @@ def private_key():
 
 
 def public_key():
-    """Renders the public key in PEM format.
+    """Renders the public key in OpenSSH format.
     This is used for verifying JWT token signatures.
+    OpenSSH is the same format used by Github, e.g.: https://api.github.com/users/davidcarboni/keys
     """
     return _key["key_pair"].public_key().public_bytes(Encoding.OpenSSH, PublicFormat.OpenSSH)
