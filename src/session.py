@@ -2,7 +2,7 @@
 This is useful when a client does not have local storage, or is unable to make rest calls.
 It's intended for a small percentage of javascript-disabled and/or older browsers.
 """
-from .database import add_session, get_session
+from .database import save_token, get_token
 
 
 def create_session(token):
@@ -13,7 +13,7 @@ def create_session(token):
     :param token: A JWT to be stored on behalf of a client that cannot store it itself.
     :return: A session ID suitable for passing to the client as a cookie value.
     """
-    return add_session(token)
+    return save_token(token)
 
 
 def get_token(session_id):
@@ -22,4 +22,4 @@ def get_token(session_id):
     :param session_id: The ID of the session.
     :return: The associated JWT, or None
     """
-    return get_session(session_id)
+    return get_token(session_id)

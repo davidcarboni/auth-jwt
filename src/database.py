@@ -46,7 +46,7 @@ def get_key(_id):
 # Sessions
 
 
-def add_session(jwt):
+def save_token(jwt):
     # TODO: this should probably set a last-accessed timestamp to give the session a lifetime.
     _id = str(uuid.uuid4())
     path = os.path.join(_session_database, _id)
@@ -56,7 +56,7 @@ def add_session(jwt):
     return _id
 
 
-def get_session(_id):
+def get_token(_id):
     # TODO: this should probably update a last-accessed timestamp to keep the session alive.
     path = os.path.join(_session_database, _id)
     if os.path.isfile(path):
