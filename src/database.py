@@ -46,11 +46,8 @@ def get_key(_id):
 # Sessions
 
 
-def list_sessions():
-    return os.listdir(_session_database)
-
-
 def add_session(jwt):
+    # TODO: this should probably set a last-accessed timestamp to give the session a lifetime.
     _id = str(uuid.uuid4())
     path = os.path.join(_session_database, _id)
     with open(path, "w") as jwt_file:
@@ -60,6 +57,7 @@ def add_session(jwt):
 
 
 def get_session(_id):
+    # TODO: this should probably update a last-accessed timestamp to keep the session alive.
     path = os.path.join(_session_database, _id)
     if os.path.isfile(path):
         with open(path, "r") as jwt_file:
