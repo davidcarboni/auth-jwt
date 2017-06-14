@@ -1,6 +1,6 @@
 import logging
 import datetime
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify, make_response
 from json import dumps
 from .token import sign, decode
 from .key import generate_key
@@ -14,8 +14,45 @@ app = Flask("auth", static_folder='static')
 
 @app.route('/sign-in', methods=['POST'])
 def sign_in():
-    token = sign({'user': 'david', 'role': 'dude'})
-    return jsonify(token)
+    json = request.get_json()
+    if json:
+        # We've been sent a json message:
+        log.debug("Json request. Woop. Modern age.")
+        return _sign_in_json(json)
+    else:
+        return _sign_in_session(request)
+
+
+def _sign_in_json(json):
+    log.debug("Received json message containing these fields: " + repr(json.keys()))
+    if json.get("user_id") and json.get("password"):
+        if authenticate(json["user_id"], json["password"]):
+            claims = {
+                "user_id": json["user_id"],
+                "roles": ["tom", "dick", "harry"]
+            }
+            token = sign(claims)
+            return jsonify({'token': token})
+        else:
+            return error("Sign-in failed.", 403)
+    else:
+        return error("Please provide user_id and password values.", 400)
+
+
+def _sign_in_session(request):
+    log.debug("Form sign-in")
+    return error("Not implemented.", 418)
+
+
+def authenticate(user_id, password):
+    # TODO: dummy for now - eventually we'll use LDAP.
+    return True
+
+
+def error(message, status_code):
+    response = jsonify(message)
+    response.status_code = status_code
+    return response
 
 
 @app.route('/keys')
