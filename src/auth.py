@@ -1,10 +1,12 @@
 import logging
 import datetime
+import re
 from flask import Flask, request, jsonify, make_response
 from json import dumps
 from .token import sign, decode
 from .key import generate_key
-from .database import list_keys, get_key
+from .session import create_session
+from .database import list_keys, get_key, get_token
 import jwt
 
 logging.basicConfig(level=logging.DEBUG)
@@ -14,45 +16,42 @@ app = Flask("auth", static_folder='static')
 
 @app.route('/sign-in', methods=['POST'])
 def sign_in():
-    json = request.get_json()
-    if json:
-        # We've been sent a json message:
-        log.debug("Json request. Woop. Modern age.")
-        return _sign_in_json(json)
-    else:
-        return _sign_in_session(request)
+    # Retrieve the submitted data
+    form = False
+    data = request.get_json()
+    if not data:
+        data = request.form
+        form = True
+    if not data:
+        return error("Please provide user_id and password values as either a Json message or a form post.", 400)
 
+    user_id = data.get("user_id", None)
+    password = data.get("password", None)
 
-def _sign_in_json(json):
-    log.debug("Received json message containing these fields: " + repr(json.keys()))
-    if json.get("user_id") and json.get("password"):
-        if authenticate(json["user_id"], json["password"]):
+    # Validate
+    if user_id and password:
+        # Authenticate
+        if authenticate(user_id, password):
+            roles = authorise()
             claims = {
-                "user_id": json["user_id"],
-                "roles": ["tom", "dick", "harry"]
+                "user_id": user_id,
+                "roles": roles
             }
-            token = sign(claims)
-            return jsonify({'token': token})
+            jwt = sign(claims)
+            return create_session(jwt) if form else jsonify({'token': jwt})
         else:
-            return error("Sign-in failed.", 403)
+            return error("Sign-in failed.", 401)
     else:
         return error("Please provide user_id and password values.", 400)
 
 
-def _sign_in_session(request):
-    log.debug("Form sign-in")
-    return error("Not implemented.", 418)
-
-
-def authenticate(user_id, password):
-    # TODO: dummy for now - eventually we'll use LDAP.
-    return True
-
-
-def error(message, status_code):
-    response = jsonify(message)
-    response.status_code = status_code
-    return response
+@app.route('/token/<session_id>')
+def token(session_id):
+    jwt = get_token(session_id)
+    if jwt:
+        return jsonify({'token': jwt})
+    else:
+        return error("No JWT available for session id " + session_id, 404)
 
 
 @app.route('/keys')
@@ -88,3 +87,19 @@ def home():
         'jwt header': jwt.get_unverified_header(token),
         'jwt claims': decoded
     })
+
+
+def authenticate(user_id, password):
+    # TODO: dummy for now - eventually we'll use LDAP.
+    return password != "wrong"
+
+
+def authorise():
+    # TODO: dummy for now - eventually we'll use LDAP.
+    return ["tom", "dick", "harry"]
+
+
+def error(message, status_code):
+    response = jsonify(message)
+    response.status_code = status_code
+    return response
