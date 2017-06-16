@@ -13,6 +13,12 @@ app = Flask("auth", static_folder='static')
 
 @app.route('/sign-in', methods=['POST'])
 def sign_in():
+    """
+    User sign-in.
+    This method expects fields 'user_id' and 'password', either in a Json message, or in a form.
+    :return: If Json was submitted, a Json message with a 'token' field.
+        If a form was submitted, a session_id cookie is set.
+    """
     # Retrieve the submitted data
     form = False
     data = request.get_json()
@@ -40,7 +46,14 @@ def sign_in():
                 "roles": roles
             }
             jwt = sign(claims)
-            return create_session(jwt) if form else jsonify({'token': jwt})
+            # Response
+            if form:
+                session_id = create_session(jwt)
+                response = make_response(session_id)
+                response.set_cookie('session_id', session_id)
+            else:
+                response = jsonify({'token': jwt})
+            return response
         else:
             return error("Sign-in failed.", 401)
     else:
@@ -49,10 +62,17 @@ def sign_in():
 
 @app.route('/token/<session_id>')
 def token(session_id):
+    """
+    Gets the token associated with the given session ID.
+    :param session_id: The session for which to retrieve the JWT.
+    :return: A Json message with a 'token' field.
+    """
     jwt = get_token(session_id)
     if jwt:
+        log.debug("Read token for session ID " + session_id)
         return jsonify({'token': jwt})
     else:
+        log.debug("No token found for session ID " + session_id)
         return error("No JWT available for session id " + session_id, 404)
 
 
@@ -71,6 +91,11 @@ def keys():
 
 @app.route('/')
 def home():
+    """
+    Runs through the process of creating and validating a JWT,
+    including key rotation to simulate a different instance verifying the token.
+    :return: Some Json displaying the results of the test.
+    """
     data = {
         'hello': 'world',
         'now': str(datetime.datetime.now())
