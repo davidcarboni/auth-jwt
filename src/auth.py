@@ -9,7 +9,6 @@ from .session import create_session
 from .database import list_keys, get_key, get_token
 import jwt
 
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 app = Flask("auth", static_folder='static')
 

@@ -1,5 +1,8 @@
 import os
+import logging
 from src.auth import app
+
+logging.basicConfig(level=logging.DEBUG)
 
 if __name__ == "__main__":
     app.run(
