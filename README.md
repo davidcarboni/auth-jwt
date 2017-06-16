@@ -12,6 +12,12 @@ The rationale is as follows:
  * Therefore a signed token (e.g. JWT) is both necessary and sufficient for trusted assertion.
  * Not using OAuth could significantly reduce complexity and potential for errors.
 
+## Features and benefits
+
+ * Public-private key signatures: this avoids the need for a shared secret between auth and clients, simplifying deployment.
+ * Elliptic curve digital signatures: part of the JWT standard, ECDSA uses shorter keys and produces smaller signature blocks with significantly faster performance than RSA.
+ * Ephemeral keys: the design of this prototype avoids the need for private key storage and transmission on startup. It ensures a group of stateless instances can sign JWTs and support verification of signatures created by any instance (running or exited). 
+
 ## Exceptions
 
 There is one possible exception to be investigated: the Revenue Scotland Service. It is believed that this is making use of "third-party access to resources", which would be consistent with the intent of OAuth.
@@ -29,15 +35,21 @@ The following is a summary of this implementation:
  * Preferred interaction is a json username/password request, with a JWT response, where the client is expected to store the JWT
  * Fallback interaction is a form post, with the JWT stored server-side and a token returned to the client in a cookie on the response
  * The intent of having these two interactions is to be able to support non-javascript users and users of browsers that do not provide local storage
- * The client passes the JWT, or cookie, to the app it wishes to be served by. The app then exchanges the cookie for a JWT if necessary, requests the public key from the auth component, verifies the integrity of the JWT and then provides service according to the autorisations contained in the token (user and AD roles).
+ * The client passes the JWT, or cookie, to the app it wishes to be served by. 
+   The app then exchanges the cookie for a JWT if necessary, requests the public key from the auth component, 
+   verifies the integrity of the JWT and then provides service according to the autorisations contained in the token (user and AD roles).
 
 ## Questions
 
- * Should we use a single key-pair, which may necessitate key-management infrastructure
- * Alternatively, should we go for ephemeral keys, which requires all instances over time to be able to access each others' public keys
+ * Should we use a single key-pair, rather than an ephemeral design, which may necessitate key-management infrastructure?
+ * Alternatively, should we use ephemeral keys, which requires all instances over time to be able to access each others' public keys
  * What key-rotation strategy is appropriate?
  * Do we have a risk of replay attacks? If so:
    * How short or long lived should JWT tokens be?
    * How will clients refresh JWT tokens (if necessary)
  * Are there any use-cases that JWT does not provide for?
 
+NB: in the case of Securities and Discharges, the appropriate level of protection is likely to be lower, 
+because the sensitive part of the transaction is protected by the physical smart-card. 
+The risk we are protecting against is "creation of an application" - 
+it should not be possible to even submit the application for processing without a signed deed. 
