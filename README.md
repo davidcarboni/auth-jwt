@@ -20,7 +20,7 @@ The rationale is as follows:
  * *Public-private key signatures*: this avoids the need for a shared secret between auth and clients, simplifying deployment.
  * *Elliptic curve digital signatures*: part of the JWT standard, ECDSA uses shorter keys and produces smaller signature blocks with significantly faster performance than RSA.
  * *Ephemeral keys*: the design of this prototype avoids the need for private key storage and transmission on startup. It ensures a group of stateless instances can sign JWTs and support verification of signatures created by any instance (running or exited).
- * *API design*: the format for the /keys endpoint is designed to follow the same API pattern as Github, e.g.: https://api.github.com/users/davidcarboni/keys
+ * *API design*: the format for the `/keys` endpoint is designed to follow the same API pattern as Github, e.g.: https://api.github.com/users/davidcarboni/keys
 
 ## Exceptions
 
@@ -34,14 +34,16 @@ The following is a summary of this implementation:
 
  * An auth component 
  * An example client app
- * The auth component takes in usernames and passwords and returns a JWT signed with a key-pair owned by the auth component
- * The auth component publishes the public key on a rest endpoint
- * Preferred interaction is a json username/password request, with a JWT response, where the client is expected to store the JWT
- * Fallback interaction is a form post, with the JWT stored server-side and a token returned to the client in a cookie on the response
- * The intent of having these two interactions is to be able to support non-javascript users and users of browsers that do not provide local storage
- * The client passes the JWT, or cookie, to the app it wishes to be served by. 
-   The app then exchanges the cookie for a JWT if necessary, requests the public key from the auth component, 
-   verifies the integrity of the JWT and then provides service according to the autorisations contained in the token (user and AD roles).
+ * The auth component takes in a `user_id` and `password` and returns a JWT signed with the private owned by the auth instance
+ * Auth instances publish the public keys of all instances (identified by a key ID represented as `kid` in the JWT header) on an endpoint
+ * Preferred interaction is a json `username`/`password` request, with a JWT response, where the client is expected to store the JWT
+ * Fallback interaction is a form post, with the JWT stored server-side and a `session_id` returned to the client in the response cookie
+ * The intent of having a fallback interaction mode is to be able to support non-javascript users 
+   and users of browsers that do not provide local storage
+ * Once the client has a JWT or `session_id` cookie, this is passed to the app the client wishes to be served by.
+ * If necessary, the app contacts auth to exchange the `session_id` for a JWT
+ * The app requests public keys from auth in order to verify the integrity of the JWT and, if the signature is valid, 
+   provides service according to the autorisations contained in the token (user and AD roles).
 
 ## Questions
 
