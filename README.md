@@ -34,7 +34,7 @@ The following is a summary of this implementation:
 
  * An auth component 
  * An example client app
- * The auth component takes in a `user_id` and `password` and returns a JWT signed with the private owned by the auth instance
+ * The auth component takes in a `user_id` and `password` and returns a JWT signed with the private key owned by the auth instance
  * Auth instances publish the public keys of all instances (identified by a key ID represented as `kid` in the JWT header) on an endpoint
  * Preferred interaction is a json `username`/`password` request, with a JWT response, where the client is expected to store the JWT
  * Fallback interaction is a form post, with the JWT stored server-side and a `session_id` returned to the client in the response cookie
