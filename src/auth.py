@@ -1,5 +1,6 @@
 import logging
 import datetime
+from jwt import get_unverified_header
 from flask import Flask, request, jsonify, make_response
 from json import dumps
 from .token import sign, decode
@@ -111,7 +112,7 @@ def home():
     return jsonify({
         'data': data,
         'jwt': jwt,
-        'jwt header': jwt.get_unverified_header(token),
+        'jwt header': get_unverified_header(jwt),
         'jwt claims': decoded
     })
 
