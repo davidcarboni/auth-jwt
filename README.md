@@ -1,5 +1,7 @@
 # Experimental JWT auth solution
 
+## Purpose
+
 This prototype asks the question "what if there was no OAuth?"
 
 ## Rationale
