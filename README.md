@@ -17,10 +17,10 @@ The rationale is as follows:
 
 ## Features and benefits
 
- * Public-private key signatures: this avoids the need for a shared secret between auth and clients, simplifying deployment.
- * Elliptic curve digital signatures: part of the JWT standard, ECDSA uses shorter keys and produces smaller signature blocks with significantly faster performance than RSA.
- * Ephemeral keys: the design of this prototype avoids the need for private key storage and transmission on startup. It ensures a group of stateless instances can sign JWTs and support verification of signatures created by any instance (running or exited).
- * Message format for the /keys endpoint is designed to follow the same API pattern as Github, e.g.: https://api.github.com/users/davidcarboni/keys
+ * *Public-private key signatures*: this avoids the need for a shared secret between auth and clients, simplifying deployment.
+ * *Elliptic curve digital signatures*: part of the JWT standard, ECDSA uses shorter keys and produces smaller signature blocks with significantly faster performance than RSA.
+ * *Ephemeral keys*: the design of this prototype avoids the need for private key storage and transmission on startup. It ensures a group of stateless instances can sign JWTs and support verification of signatures created by any instance (running or exited).
+ * *API design*: the format for the /keys endpoint is designed to follow the same API pattern as Github, e.g.: https://api.github.com/users/davidcarboni/keys
 
 ## Exceptions
 
