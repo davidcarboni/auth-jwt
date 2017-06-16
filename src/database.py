@@ -3,6 +3,7 @@ import logging
 import os
 import uuid
 import tempfile
+import re
 
 log = logging.getLogger(__name__)
 
@@ -58,7 +59,9 @@ def save_token(jwt):
 
 def get_token(_id):
     # TODO: this should probably update a last-accessed timestamp to keep the session alive.
-    path = os.path.join(_session_database, _id)
-    if os.path.isfile(path):
-        with open(path, "r") as jwt_file:
-            return jwt_file.read()
+    # Disallow . .. \ / and whitespace
+    if re.fullmatch('[^\s\.\\/]+', _id):
+        path = os.path.join(_session_database, _id)
+        if os.path.isfile(path):
+            with open(path, "r") as jwt_file:
+                return jwt_file.read()
