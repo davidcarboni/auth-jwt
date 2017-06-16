@@ -1,2 +1,2 @@
 # https://devcenter.heroku.com/articles/python-gunicorn
-web: gunicorn -b 0.0.0.0:$PORT app:app --timeout 10
+web: FLASK_DEBUG=1 gunicorn -b 0.0.0.0:$PORT app:app --timeout 10
