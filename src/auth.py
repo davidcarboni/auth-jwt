@@ -1,13 +1,11 @@
 import logging
 import datetime
-import re
 from flask import Flask, request, jsonify, make_response
 from json import dumps
 from .token import sign, decode
 from .key import generate_key
 from .session import create_session
 from .database import list_keys, get_key, get_token
-import jwt
 
 log = logging.getLogger(__name__)
 app = Flask("auth", static_folder='static')
@@ -21,7 +19,11 @@ def sign_in():
     if not data:
         data = request.form
         form = True
+        log.debug("Form data received.")
+    else:
+        log.debug("Json data received.")
     if not data:
+        log.debug("Request data not found.")
         return error("Please provide user_id and password values as either a Json message or a form post.", 400)
 
     user_id = data.get("user_id", None)
@@ -30,8 +32,9 @@ def sign_in():
     # Validate
     if user_id and password:
         # Authenticate
+        log.debug("Authenticating user " + user_id)
         if authenticate(user_id, password):
-            roles = authorise()
+            roles = authorise(user_id)
             claims = {
                 "user_id": user_id,
                 "roles": roles
@@ -73,16 +76,16 @@ def home():
         'now': str(datetime.datetime.now())
     }
     log.debug("Data: " + dumps(data))
-    token = sign(data)
-    log.debug("Token: " + token)
+    jwt = sign(data)
+    log.debug("Token: " + jwt)
     log.debug("Generating new key to simulate being a different instance..")
     generate_key()
     log.debug("Now decoding token..")
-    decoded = decode(token)
+    decoded = decode(jwt)
     log.debug("Decoded: " + dumps(decoded))
     return jsonify({
         'data': data,
-        'jwt': token,
+        'jwt': jwt,
         'jwt header': jwt.get_unverified_header(token),
         'jwt claims': decoded
     })
@@ -93,7 +96,7 @@ def authenticate(user_id, password):
     return password != "wrong"
 
 
-def authorise():
+def authorise(user_id):
     # TODO: dummy for now - eventually we'll use LDAP.
     return ["tom", "dick", "harry"]
 
