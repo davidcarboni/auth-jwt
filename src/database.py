@@ -24,6 +24,7 @@ os.makedirs(_session_database)
 
 
 def list_keys():
+    log.debug("Listing public keys in " + _key_database)
     return os.listdir(_key_database)
 
 
@@ -41,6 +42,7 @@ def get_key(_id):
     path = os.path.join(_key_database, _id)
     if os.path.isfile(path):
         with open(path, "r") as public_key_file:
+            log.debug("Reading public key from " + path)
             return public_key_file.read()
 
 
@@ -64,4 +66,5 @@ def get_token(_id):
         path = os.path.join(_session_database, _id)
         if os.path.isfile(path):
             with open(path, "r") as jwt_file:
+                log.debug("Reading JWT from " + path)
                 return jwt_file.read()
