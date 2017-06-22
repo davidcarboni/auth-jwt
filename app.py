@@ -2,7 +2,7 @@ import os
 import logging
 import datetime
 from jwt import get_unverified_header
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, render_template
 from json import dumps
 from src.token import sign, decode
 from src.key import generate_key
@@ -20,14 +20,19 @@ log = logging.getLogger(__name__)
 
 # App
 
-app = Flask("auth", static_folder='static')
+app = Flask("auth", static_folder='static', static_url_path='')
+
+
+@app.route('/sign-in', methods=['GET'])
+def sign_in_form():
+    return render_template('sign-in.html')
 
 
 @app.route('/sign-in', methods=['POST'])
 def sign_in():
     """
     User sign-in.
-    This method expects fields 'user_id' and 'password', either in a Json message, or in a form.
+    This method expects fields 'username' and 'password', either in a Json message, or in a form.
     :return: If Json was submitted, a Json message with a 'token' field.
         If a form was submitted, a session_id cookie is set.
     """
@@ -42,19 +47,19 @@ def sign_in():
         log.debug("Json data received.")
     if not data:
         log.debug("Request data not found.")
-        return error("Please provide user_id and password values as either a Json message or a form post.", 400)
+        return error("Please provide username and password values as either a Json message or a form post.", 400)
 
-    user_id = data.get("user_id", None)
+    username = data.get("username", None)
     password = data.get("password", None)
 
     # Validate
-    if user_id and password:
+    if username and password:
         # Authenticate
-        log.debug("Authenticating user " + user_id)
-        if authenticate(user_id, password):
-            roles = authorise(user_id)
+        log.debug("Authenticating user " + username)
+        if authenticate(username, password):
+            roles = authorise(username)
             claims = {
-                "user_id": user_id,
+                "username": username,
                 "roles": roles
             }
             jwt = sign(claims)
@@ -69,7 +74,7 @@ def sign_in():
         else:
             return error("Sign-in failed.", 401)
     else:
-        return error("Please provide user_id and password values.", 400)
+        return error("Please provide username and password values.", 400)
 
 
 @app.route('/token/<session_id>')
@@ -128,12 +133,12 @@ def home():
     })
 
 
-def authenticate(user_id, password):
+def authenticate(username, password):
     # TODO: dummy for now - eventually we'll use LDAP.
     return password != "wrong"
 
 
-def authorise(user_id):
+def authorise(username):
     # TODO: dummy for now - eventually we'll use LDAP.
     return ["tom", "dick", "harry"]
 
