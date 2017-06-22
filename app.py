@@ -2,7 +2,7 @@ import os
 import logging
 import datetime
 from jwt import get_unverified_header
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, redirect, jsonify, make_response, render_template
 from json import dumps
 from src.token import sign, decode
 from src.key import generate_key
@@ -21,6 +21,11 @@ log = logging.getLogger(__name__)
 # App
 
 app = Flask("auth", static_folder='static', static_url_path='')
+
+
+@app.route('/')
+def default():
+    return redirect("/sign-in")
 
 
 @app.route('/sign-in', methods=['GET'])
@@ -106,8 +111,8 @@ def keys():
     return jsonify(result)
 
 
-@app.route('/')
-def home():
+@app.route('/test')
+def test():
     """
     Runs through the process of creating and validating a JWT,
     including key rotation to simulate a different instance verifying the token.
