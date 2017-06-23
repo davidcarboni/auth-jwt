@@ -11,5 +11,5 @@ node("slave") {
 }
 
 def dockerBuild() {
-    sh "docker build --tag auth ."
+    sh "sudo docker build --tag auth ."
 }
