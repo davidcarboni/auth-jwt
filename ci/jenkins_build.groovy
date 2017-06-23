@@ -14,7 +14,11 @@ node("slave") {
 
 }
 
-def dockerRun() {
+def dockerBuild() {
+    sh "sudo docker build --tag auth ."
+}
+
+def dockerBuild() {
     sh "sudo docker rm -f auth || echo No instance running."
     sh "sudo docker run -d --name auth -p 5000:5000 auth"
 }
