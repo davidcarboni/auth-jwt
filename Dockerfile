@@ -4,6 +4,8 @@ FROM python:3
 # For discussion of onbuild variant images see: https://hub.docker.com/_/python/
 WORKDIR /usr/src/app
 COPY src src
+COPY static static
+COPY templates templates
 COPY app.py .
 COPY requirements.txt .
 COPY .pydistutils.cfg /root/
@@ -14,8 +16,8 @@ ENV PIP_ARGS --index-url http://artifactory.ros.gov.uk/artifactory/api/pypi/ros-
              --disable-pip-version-check
 
 # Install project requirements
-#RUN pip3 install $PIP_ARGS -r requirements.txt
-RUN pip3 install -r requirements.txt
+RUN pip3 install $PIP_ARGS -r requirements.txt
+#RUN pip3 install -r requirements.txt
 
 # non-root user
 RUN groupadd -r python && \
