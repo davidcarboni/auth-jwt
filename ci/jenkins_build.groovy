@@ -8,8 +8,8 @@ node("slave") {
         dockerBuild()
     }
 
-def dockerBuild() {
-    sh "docker build --tag auth ."
 }
 
+def dockerBuild() {
+    sh "docker build --tag auth ."
 }
