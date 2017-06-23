@@ -1,5 +1,9 @@
 FROM python:3
 
+# Just because the lady loves.. to build her own custom base images:
+RUN yum install -y openssl
+RUN yum install -y openssl-devel
+
 # Adapted from the python:onbuild image
 # For discussion of onbuild variant images see: https://hub.docker.com/_/python/
 WORKDIR /usr/src/app
