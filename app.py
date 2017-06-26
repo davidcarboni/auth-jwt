@@ -25,12 +25,8 @@ app = Flask("auth", static_folder='static', static_url_path='')
 
 @app.route('/')
 def default():
-    return redirect("/sign-in")
-
-
-@app.route('/sign-in', methods=['GET'])
-def sign_in_form():
-    return render_template('sign-in.html')
+    log.info(request.cookies)
+    return render_template('index.html')
 
 
 @app.route('/sign-in', methods=['POST'])
@@ -41,6 +37,7 @@ def sign_in():
     :return: If Json was submitted, a Json message with a 'token' field.
         If a form was submitted, a session_id cookie is set.
     """
+    log.info(request.cookies)
     # Retrieve the submitted data
     form = False
     data = request.get_json()
@@ -71,8 +68,12 @@ def sign_in():
             # Response
             if form:
                 session_id = create_session(jwt)
-                response = make_response(session_id)
-                response.set_cookie('session_id', session_id)
+                if request.cookies.get('service'):
+                    response = redirect("/" + request.cookies.get('service') + "/")
+                else:
+                    response = make_response(session_id)
+
+                response.set_cookie('Bearer-session', session_id)
             else:
                 response = jsonify({'token': jwt})
             return response
@@ -158,6 +159,6 @@ if __name__ == "__main__":
     log.info("FLASK_DEBUG is " + str(debug))
     app.run(
         host="0.0.0.0",
-        port=os.getenv("PORT", "5000"),
+        port=int(os.getenv("PORT", "5000")),
         debug=debug
     )
