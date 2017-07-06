@@ -7,7 +7,7 @@ from json import dumps
 from src.token import sign, decode
 from src.key import generate_key
 from src.session import create_session
-from src.database import list_keys, get_key, get_token
+from src.database import list_keys, get_key, get_token, delete_token
 
 
 # Logging
@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 app = Flask("auth", static_folder='static', static_url_path='')
 
 
-@app.route('/')
+@app.route('/sign-in', methods=['GET'])
 def default():
     log.info(request.cookies)
     return render_template('index.html')
@@ -37,50 +37,70 @@ def sign_in():
     :return: If Json was submitted, a Json message with a 'token' field.
         If a form was submitted, a session_id cookie is set.
     """
-    log.info(request.cookies)
+
     # Retrieve the submitted data
     form = False
     data = request.get_json()
-    if not data:
-        data = request.form
-        form = True
-        log.debug("Form data received.")
-    else:
+    if data:
         log.debug("Json data received.")
-    if not data:
-        log.debug("Request data not found.")
-        return error("Please provide username and password values as either a Json message or a form post.", 400)
-
-    username = data.get("username", None)
-    password = data.get("password", None)
+    else:
+        data = request.form
+        if data:
+            form = True
+            log.debug("Form data received.")
 
     # Validate
-    if username and password:
-        # Authenticate
-        log.debug("Authenticating user " + username)
-        if authenticate(username, password):
-            roles = authorise(username)
-            claims = {
-                "username": username,
-                "roles": roles
-            }
-            jwt = sign(claims)
-            # Response
-            if form:
-                session_id = create_session(jwt)
-                if request.cookies.get('service'):
-                    response = redirect("/" + request.cookies.get('service') + "/")
-                else:
-                    response = make_response(session_id)
+    username = data.get("username", None)
+    password = data.get("password", None)
+    if not (username and password):
+        log.debug("Request data not found.")
+        print("username=" + str(username))
+        print("password=" + str(password))
+        print(data)
+        return error("Please provide username and password values as either a Json message or a form post.", 400)
 
-                response.set_cookie('Bearer-session', session_id)
+    # Authenticate
+    log.debug("Authenticating user " + str(username))
+    if authenticate(username, password):
+        roles = authorise(username)
+        claims = {
+            "username": username,
+            "roles": roles
+        }
+        jwt = sign(claims)
+
+        # Response
+        session_id = create_session(jwt)
+        if form:
+            if request.cookies.get('service'):
+                response = redirect(service_url())
             else:
-                response = jsonify({'token': jwt})
-            return response
+                response = make_response(session_id)
         else:
-            return error("Sign-in failed.", 401)
+            response = jsonify({'token': jwt})
+
+        response.set_cookie('jwt-session', session_id)
+        return response
     else:
-        return error("Please provide username and password values.", 400)
+        return error("Sign-in failed.", 401)
+
+
+@app.route('/sign-out')
+def sign_out():
+    """
+    User sign-out.
+    If a session identifier is passed in the cookie,
+    the session will be removed from the database
+    and the cookie value will be cleared.
+    """
+
+    session_id = request.cookies.get('jwt-session')
+    if session_id:
+        delete_token(session_id)
+
+    response = redirect("/sign-in")
+    response.set_cookie('jwt-session', '', expires=0)
+    return response
 
 
 @app.route('/token/<session_id>')
@@ -146,7 +166,23 @@ def authenticate(username, password):
 
 def authorise(username):
     # TODO: dummy for now - eventually we'll use LDAP.
-    return ["tom", "dick", "harry"]
+    return [
+        "dev_eforms_users",
+        "dev_advance_notices_users",
+        "dev_advance_notices_reviewers",
+        "ESERVICES_WRAPPER_EDITOR",
+        "TAXSERVER_SEARCH",
+        "PFSI_ARTL_DISCHARGE_REQUESTER",
+        "PFSI_ARTL_DISCHARGE_APPROVER",
+        "PFSI_BT_SERVICE_ADMINISTRATOR",
+        "PFSI_ROS_AGENCY_ADMINISTRATOR"
+    ]
+
+
+def service_url():
+    service = request.cookies.get('service')
+    if service == 'discharges' or service == 'securities':
+        return "/" + service
 
 
 def error(message, status_code):
