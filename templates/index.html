@@ -4,8 +4,8 @@
     <title>Registers of Scotland</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="../../css/rosgovuk.min.css?1499077270638" media="screen" />
-    <link rel="stylesheet" href="../../css/print.min.css?1499077270638" media="print" />
+    <link rel="stylesheet" href="/css/rosgovuk.min.css" media="screen" />
+    <link rel="stylesheet" href="/css/print.min.css" media="print" />
 
     <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
     <!-- never cache patterns -->
@@ -15,8 +15,8 @@
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
 
-<link rel="stylesheet" href="../../styleguide/css/styleguide.min.css?1499077270638" media="all">
-<link rel="stylesheet" href="../../styleguide/css/prism-typeahead.min.css?1499077270638" media="all" />
+<link rel="stylesheet" href="/styleguide/css/styleguide.min.css" media="all">
+<link rel="stylesheet" href="/styleguide/css/prism-typeahead.min.css" media="all" />
 
     <!-- End Pattern Lab -->
 
@@ -27,7 +27,7 @@
     <div class="header-global">
       <div class="header-logo">
         <a href="https://www.ros.gov.uk/" title="Go to the ROS.GOV.UK homepage" id="logo" class="content">
-          <img src="../../css/images/ros-logo-white.svg" height="32" alt=""> 
+          <img src="/css/images/ros-logo-white.svg" height="32" alt="">
         </a>
       </div>
     </div>
@@ -50,7 +50,7 @@
 		<div class="column-two-thirds">
 			<h1 class="heading-xlarge">Sign in</h1>
 
-			<form>
+			<form method="POST" action="/sign-in">
 				<div class="form-group">
 	<label class="form-label-bold" for="username">Username</label>
 	<input class="form-control" type="text" id="username" name="username">
@@ -198,7 +198,7 @@
   })();
 </script>
 
-    <script src="../../js/govuk.min.js"></script>
+    <script src="/js/govuk.min.js"></script>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
@@ -220,7 +220,7 @@ $( "#signin" ).click( function() {
     hide()
 
     $.ajax({
-        url: "sign-in",
+        url: "/sign-in",
         type: "POST",
         data: JSON.stringify({
         	username: $("#username").val(),
@@ -253,7 +253,7 @@ $( "#signin" ).click( function() {
 			if (service) {
 				console.log("Redirecting to service " + service)
 				Cookies.set('Bearer', jwt)
-				target = "/" + service + "/"
+				target = "/" + service
 				window.location.replace(target)
 			} else {
 				console.log("No service cookie set to redirect to.")
