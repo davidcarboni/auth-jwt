@@ -29,21 +29,24 @@ def list_keys():
 
 
 def add_key(public_key):
-    _id = str(uuid.uuid4())
-    path = os.path.join(_key_database, _id)
+    key_id = new_id()
+    path = os.path.join(_key_database, key_id)
 
     with open(path, "w") as public_key_file:
         public_key_file.write(public_key)
     log.debug("Public key saved to " + path)
-    return _id
+    log.debug("Saved public key: " + public_key)
+    return key_id
 
 
-def get_key(_id):
-    path = os.path.join(_key_database, _id)
+def get_key(key_id):
+    path = os.path.join(_key_database, key_id)
     if os.path.isfile(path):
         with open(path, "r") as public_key_file:
             log.debug("Reading public key from " + path)
-            return public_key_file.read()
+            key = public_key_file.read()
+            log.debug("Read public key:  " + key)
+            return key
 
 
 # Sessions
@@ -51,20 +54,41 @@ def get_key(_id):
 
 def save_token(jwt):
     # TODO: this should probably set a last-accessed timestamp to give the session a lifetime.
-    _id = str(uuid.uuid4())
-    path = os.path.join(_session_database, _id)
+    token_id = new_id()
+    path = os.path.join(_session_database, token_id)
     with open(path, "w") as jwt_file:
         jwt_file.write(jwt)
     log.debug("Session saved to " + path)
-    return _id
+    return token_id
 
 
-def get_token(_id):
+def get_token(token_id):
     # TODO: this should probably update a last-accessed timestamp to keep the session alive.
     # Disallow . .. \ / and whitespace
-    if re.fullmatch('[^\s\.\\/]+', _id):
-        path = os.path.join(_session_database, _id)
+    if re.fullmatch('[^\s\.\\/]+', token_id):
+        path = os.path.join(_session_database, token_id)
         if os.path.isfile(path):
             with open(path, "r") as jwt_file:
                 log.debug("Reading JWT from " + path)
                 return jwt_file.read()
+
+
+def delete_token(token_id):
+    # Disallow . .. \ / and whitespace
+    if re.fullmatch('[^\s\.\\/]+', token_id):
+        path = os.path.join(_session_database, token_id)
+        if os.path.isfile(path):
+            os.remove(path)
+
+
+def new_id():
+    """Generate a secure random ID:
+
+    https://stackoverflow.com/questions/817882/unique-session-id-in-python/6092448#6092448
+
+    The implementation of uuid.uuid4 uses os.urandom(16) (at the time of writing) so should be good enough.
+
+    See also: https://www.2uo.de/myths-about-urandom/
+
+    """
+    return str(uuid.uuid4())
