@@ -34,7 +34,8 @@ def form():
     log.info(request.cookies)
     return render_template('index.html',
                            discharges_url=service_url('discharges'),
-                           securities_url=service_url('securities'))
+                           securities_url=service_url('securities'),
+                           cookie_path=os.getenv('COOKIE_PATH', ''))
 
 
 @app.route('/sign-in', methods=['POST'])
