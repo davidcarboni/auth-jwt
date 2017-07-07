@@ -10,6 +10,11 @@ from src.session import create_session
 from src.database import list_keys, get_key, get_token, delete_token
 
 
+# Config
+
+COOKIE_DOMAIN = os.getenv('COOKIE_DOMAIN', None)
+
+
 # Logging
 
 debug = bool(os.getenv("FLASK_DEBUG"))
@@ -35,7 +40,7 @@ def form():
     return render_template('index.html',
                            discharges_url=service_url('discharges'),
                            securities_url=service_url('securities'),
-                           cookie_path=os.getenv('COOKIE_PATH', ''))
+                           cookie_domain=COOKIE_DOMAIN)
 
 
 @app.route('/sign-in', methods=['POST'])

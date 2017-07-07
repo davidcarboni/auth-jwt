@@ -252,7 +252,7 @@ $( "#signin" ).click( function() {
 			service = Cookies.get('service')
 			if (service) {
 				console.log("Redirecting to service " + service)
-				Cookies.set('Bearer', jwt, { path: '{{cookie_path}}' })
+				Cookies.set('Bearer', jwt, { domain: '{{cookie_domain}}' })
 				target = "/" + service
 				window.location.replace(target)
 			} else {
