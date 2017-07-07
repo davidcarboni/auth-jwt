@@ -187,8 +187,10 @@ def authorise(username):
 
 def service_url():
     service = request.cookies.get('service')
-    if service == 'discharges' or service == 'securities':
-        return "/" + service
+    if service == 'discharges':
+        return os.getenv("DISCHARGES_URL", "/discharges")
+    elif service == 'securities':
+        return os.getenv("SECURITIES_URL", "/securities")
 
 
 def error(message, status_code):
