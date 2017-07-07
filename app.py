@@ -23,8 +23,14 @@ log = logging.getLogger(__name__)
 app = Flask("auth", static_folder='static', static_url_path='')
 
 
-@app.route('/sign-in', methods=['GET'])
+@app.route('/')
 def default():
+    log.info("Helper redirect to /sign-in")
+    return redirect("sign-in")
+
+
+@app.route('/sign-in', methods=['GET'])
+def form():
     log.info(request.cookies)
     return render_template('index.html')
 
