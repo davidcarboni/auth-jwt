@@ -32,7 +32,9 @@ def default():
 @app.route('/sign-in', methods=['GET'])
 def form():
     log.info(request.cookies)
-    return render_template('index.html')
+    return render_template('index.html',
+                           discharges_url=service_url('discharges'),
+                           securities_url=service_url('securities'))
 
 
 @app.route('/sign-in', methods=['POST'])
@@ -79,7 +81,8 @@ def sign_in():
         session_id = create_session(jwt)
         if form:
             if request.cookies.get('service'):
-                response = redirect(service_url())
+                service = request.cookies.get('service')
+                response = redirect(service_url(service))
             else:
                 response = make_response(session_id)
         else:
@@ -185,8 +188,7 @@ def authorise(username):
     ]
 
 
-def service_url():
-    service = request.cookies.get('service')
+def service_url(service):
     if service == 'discharges':
         return os.getenv("DISCHARGES_URL", "/discharges")
     elif service == 'securities':
