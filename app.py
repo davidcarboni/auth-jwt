@@ -36,7 +36,8 @@ def default():
 
 @app.route('/sign-in', methods=['GET'])
 def form():
-    log.info(request.cookies)
+    log.info("Cookie is: " + request.cookies)
+    log.info("Setting cookie for domain: " + COOKIE_DOMAIN)
     return render_template('index.html',
                            discharges_url=service_url('discharges'),
                            securities_url=service_url('securities'),
