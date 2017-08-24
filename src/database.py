@@ -4,11 +4,20 @@ import os
 import uuid
 import tempfile
 import re
+from pymongo import MongoClient
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 mongodb_uri = os.getenv('MONGODB_URI')
+if mongodb_uri:
+    client = MongoClient(mongodb_uri)
+    log.debug(client)
+    database = client.get_database()
+    log.debug(database)
+    collection = database.get_collection("keys")
+    log.debug(collection)
+
 
 # Set up temporary folders
 
