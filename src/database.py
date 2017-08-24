@@ -35,41 +35,50 @@ os.makedirs(_session_database)
 
 
 def list_keys():
-    log.debug("Listing public keys in " + _key_database)
+    log.debug("Listing public keys")
 
-    for found in keys.find():
-        log.debug("Found: " + str(found))
-
-    return os.listdir(_key_database)
+    if keys:
+        result = []
+        for found in keys.find():
+            result.append({'id': found['key_id'], 'key': found['public_key']})
+        log.debug("Found: " + str(result))
+        return result
+    else:
+        return os.listdir(_key_database)
 
 
 def add_key(public_key):
     key_id = new_id()
-    path = os.path.join(_key_database, key_id)
 
-    with open(path, "w") as public_key_file:
-        public_key_file.write(public_key)
-    log.debug("Public key saved to " + path)
-    log.debug("Saved public key: " + public_key)
+    if keys:
+        mongo_id = keys.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
+        log.debug("Inserted ID is " + str(mongo_id))
+    else:
+        path = os.path.join(_key_database, key_id)
 
-    mongo_id = database.keys.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
-    log.debug("Inserted ID is " + str(mongo_id))
+        with open(path, "w") as public_key_file:
+            public_key_file.write(public_key)
+        log.debug("Public key saved to " + path)
 
+    log.debug("Saved public key: " + key_id + " (" + public_key + ")")
     return key_id
 
 
 def get_key(key_id):
 
-    found = keys.find_one({'key_id': key_id})
-    log.debug("Found: " + str(found))
-
-    path = os.path.join(_key_database, key_id)
-    if os.path.isfile(path):
-        with open(path, "r") as public_key_file:
-            log.debug("Reading public key from " + path)
-            key = public_key_file.read()
-            log.debug("Read public key:  " + key)
-            return key
+    if keys:
+        found = keys.find_one({'key_id': key_id})
+        log.debug("Found: " + str(found))
+        if found:
+            return {'id': found['key_id'], 'key': found['public_key']}
+    else:
+        path = os.path.join(_key_database, key_id)
+        if os.path.isfile(path):
+            with open(path, "r") as public_key_file:
+                log.debug("Reading public key from " + path)
+                key = public_key_file.read()
+                log.debug("Read public key:  " + key)
+                return key
 
 
 # Sessions
