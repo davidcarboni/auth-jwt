@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 mongodb_uri = os.getenv('MONGODB_URI')
-log.error("mongodb_uri=" + str(mongodb_uri))
 
 # Set up temporary folders
 
@@ -23,7 +22,6 @@ _session_database = os.path.join(_database, "sessions")
 log.debug("creating session database: " + _session_database)
 os.makedirs(_session_database)
 
-print("sasasasassasasa")
 # Keys
 
 
