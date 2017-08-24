@@ -15,8 +15,8 @@ if mongodb_uri:
     log.debug(client)
     database = client.get_database()
     log.debug(database)
-    collection = database.get_collection("keys")
-    log.debug(collection)
+    keys = database.get_collection("keys")
+    log.debug(keys)
 
 
 # Set up temporary folders
@@ -36,6 +36,10 @@ os.makedirs(_session_database)
 
 def list_keys():
     log.debug("Listing public keys in " + _key_database)
+
+    for found in keys.find():
+        log.debug("Found: " + str(found))
+
     return os.listdir(_key_database)
 
 
@@ -47,10 +51,18 @@ def add_key(public_key):
         public_key_file.write(public_key)
     log.debug("Public key saved to " + path)
     log.debug("Saved public key: " + public_key)
+
+    mongo_id = database.keys.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
+    log.debug("Inserted ID is " + str(mongo_id))
+
     return key_id
 
 
 def get_key(key_id):
+
+    found = keys.find_one({'key_id': key_id})
+    log.debug("Found: " + str(found))
+
     path = os.path.join(_key_database, key_id)
     if os.path.isfile(path):
         with open(path, "r") as public_key_file:
