@@ -40,8 +40,8 @@ def list_keys():
     if keys:
         result = []
         for found in keys.find():
-            result.append({'id': found['key_id'], 'key': found['public_key']})
-        log.debug("Found: " + str(result))
+            result.append(found['key_id'])
+        log.debug("Found keys: " + str(result))
         return result
     else:
         return os.listdir(_key_database)
