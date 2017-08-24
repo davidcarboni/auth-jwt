@@ -17,7 +17,7 @@ COOKIE_DOMAIN = os.getenv('COOKIE_DOMAIN', None)
 
 # Logging
 
-debug = bool(os.getenv("FLASK_DEBUG"))
+debug = bool(os.getenv("FLASK_DEBUG")) or True
 logging_level = logging.DEBUG if debug else logging.WARNING
 logging.basicConfig(level=logging_level)
 log = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ def default():
 @app.route('/sign-in', methods=['GET'])
 def form():
     log.info("Cookie is: " + str(request.cookies))
-    log.info("Setting cookie for domain: " + COOKIE_DOMAIN)
+    log.info("Setting cookie for domain: " + str(COOKIE_DOMAIN))
     return render_template('index.html',
                            discharges_url=service_url('discharges'),
                            securities_url=service_url('securities'),
