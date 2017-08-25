@@ -1,5 +1,7 @@
 import os
 import logging
+import sleuth
+import b3
 import datetime
 from jwt import get_unverified_header
 from flask import Flask, request, redirect, jsonify, make_response, render_template
@@ -26,6 +28,9 @@ log = logging.getLogger(__name__)
 # App
 
 app = Flask("auth", static_folder='static', static_url_path='')
+
+app.before_request(b3.start_span)
+app.after_request(b3.end_span)
 
 
 @app.route('/')
