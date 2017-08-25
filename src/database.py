@@ -15,14 +15,12 @@ log.setLevel(logging.DEBUG)
 # Database
 
 mongodb_uri = os.getenv('MONGODB_URI')
+collection = None
 if mongodb_uri:
     # Use Mongo
     client = MongoClient(mongodb_uri)
-    log.debug(client)
     database = client.get_database()
-    log.debug(database)
-    keys = database.get_collection("keys")
-    log.debug(keys)
+    collection = database.get_collection("keys")
 else:
     # Fall back to filesystem
     _database = tempfile.TemporaryDirectory().name
@@ -36,9 +34,9 @@ else:
 def list_keys():
     log.debug("Listing public keys")
 
-    if keys:
+    if collection:
         result = []
-        for found in keys.find():
+        for found in collection.find():
             result.append(found['key_id'])
         log.debug("Found keys: " + str(result))
         return result
@@ -49,8 +47,8 @@ def list_keys():
 def add_key(public_key):
     key_id = new_id()
 
-    if keys:
-        mongo_id = keys.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
+    if collection:
+        mongo_id = collection.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
         log.debug("Inserted ID is " + str(mongo_id))
     else:
         path = os.path.join(_key_database, key_id)
@@ -65,8 +63,8 @@ def add_key(public_key):
 
 def get_key(key_id):
 
-    if keys:
-        found = keys.find_one({'key_id': key_id})
+    if collection:
+        found = collection.find_one({'key_id': key_id})
         log.debug("Found: " + str(found))
         if found:
             return found['public_key']
