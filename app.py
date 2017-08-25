@@ -90,7 +90,7 @@ def sign_in():
             response = redirect(service_url(service))
         else:
             response = jsonify({'jwt': jwt})
-        response.set_cookie('jwt', jwt)
+        response.set_cookie('jwt', jwt, domain=".ros.9ov.uk")
         return response
     else:
         return error("Sign-in failed.", 401)
