@@ -123,7 +123,7 @@ def keys():
 
 def authenticate(username, password):
     # TODO: dummy for now - eventually we'll use LDAP.
-    return password != "wrong"
+    return username and password != "wrong"
 
 
 def authorise(username):
