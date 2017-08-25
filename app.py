@@ -2,24 +2,19 @@ import os
 import logging
 import sleuth
 import b3
-import datetime
-from jwt import get_unverified_header
-from flask import Flask, request, redirect, jsonify, make_response, render_template
-from json import dumps
-from src.token import sign, decode
-from src.key import generate_key
-from src.session import create_session
-from src.database import list_keys, get_key, get_token, delete_token
+from flask import Flask, request, redirect, jsonify, render_template
+from src.token import sign
+from src.database import list_keys, get_key
 
 
 # Config
 
+debug = bool(os.getenv("FLASK_DEBUG")) or True
 COOKIE_DOMAIN = os.getenv('COOKIE_DOMAIN', None)
 
 
 # Logging
 
-debug = bool(os.getenv("FLASK_DEBUG")) or True
 logging_level = logging.DEBUG if debug else logging.WARNING
 logging.basicConfig(level=logging_level)
 log = logging.getLogger(__name__)
@@ -90,17 +85,12 @@ def sign_in():
         jwt = sign(claims)
 
         # Response
-        session_id = create_session(jwt)
-        if form:
-            if request.cookies.get('service'):
-                service = request.cookies.get('service')
-                response = redirect(service_url(service))
-            else:
-                response = make_response(session_id)
+        if form and request.cookies.get('service'):
+            service = request.cookies.get('service')
+            response = redirect(service_url(service))
         else:
-            response = jsonify({'token': jwt})
-
-        response.set_cookie('jwt-session', session_id)
+            response = jsonify({'jwt': jwt})
+        response.set_cookie('jwt', jwt)
         return response
     else:
         return error("Sign-in failed.", 401)
@@ -110,39 +100,17 @@ def sign_in():
 def sign_out():
     """
     User sign-out.
-    If a session identifier is passed in the cookie,
-    the session will be removed from the database
-    and the cookie value will be cleared.
+    It's the client's responsibility to dispose of a JWT if it's being stored anywhere other than via the cookie.
+    This will clear the cookie and redirect to sign-in.
     """
-
-    session_id = request.cookies.get('jwt-session')
-    if session_id:
-        delete_token(session_id)
-
     response = redirect("/sign-in")
-    response.set_cookie('jwt-session', '', expires=0)
+    response.set_cookie('jwt', '', expires=0)
     return response
-
-
-@app.route('/token/<session_id>')
-def token(session_id):
-    """
-    Gets the token associated with the given session ID.
-    :param session_id: The session for which to retrieve the JWT.
-    :return: A Json message with a 'token' field.
-    """
-    jwt = get_token(session_id)
-    if jwt:
-        log.debug("Read token for session ID " + session_id)
-        return jsonify({'token': jwt})
-    else:
-        log.debug("No token found for session ID " + session_id)
-        return error("No JWT available for session id " + session_id, 404)
 
 
 @app.route('/keys')
 def keys():
-    """Returns the public key of this instance.
+    """Returns the public key of this and any other instances.
     The fields in the returned Json match what Github does for public keys.
     e.g. see https://api.github.com/users/davidcarboni/keys
     """
@@ -151,33 +119,6 @@ def keys():
     for _id in list_keys():
         result.append({'id': _id, 'key': get_key(_id)})
     return jsonify(result)
-
-
-@app.route('/test')
-def test():
-    """
-    Runs through the process of creating and validating a JWT,
-    including key rotation to simulate a different instance verifying the token.
-    :return: Some Json displaying the results of the test.
-    """
-    data = {
-        'hello': 'world',
-        'now': str(datetime.datetime.now())
-    }
-    log.debug("Data: " + dumps(data))
-    jwt = sign(data)
-    log.debug("Token: " + jwt)
-    log.debug("Generating new key to simulate being a different instance..")
-    generate_key()
-    log.debug("Now decoding token..")
-    decoded = decode(jwt)
-    log.debug("Decoded: " + dumps(decoded))
-    return jsonify({
-        'data': data,
-        'jwt': jwt,
-        'jwt header': get_unverified_header(jwt),
-        'jwt claims': decoded
-    })
 
 
 def authenticate(username, password):
