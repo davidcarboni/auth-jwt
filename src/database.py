@@ -38,7 +38,7 @@ def list_keys():
         result = []
         for found in collection.find():
             result.append(found['key_id'])
-        log.debug("Found $(count) keys.", count=len(result))
+        log.debug("Found {count} keys.".format(count=len(result)))
         return result
     else:
         return os.listdir(_key_database)
@@ -73,7 +73,7 @@ def get_key(key_id):
             with open(path, "r") as public_key_file:
                 key = public_key_file.read()
                 return key
-    log.debug("Key not found: $(key_id)", key_id=key_id)
+    log.debug("Key not found: {key_id}".format(key_id=key_id))
 
 
 def new_id():

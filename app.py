@@ -84,7 +84,7 @@ def sign_in():
             "roles": roles
         }
         jwt = sign(claims)
-        log.debug("JWT is: $(jwt)", jwt=jwt)
+        log.debug("JWT is: {jwt}".format(jwt=jwt))
 
         # Response
         if form and request.cookies.get('service'):
