@@ -4,8 +4,8 @@
     <title>Registers of Scotland</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="/css/rosgovuk.min.css" media="screen" />
-    <link rel="stylesheet" href="/css/print.min.css" media="print" />
+    <link rel="stylesheet" href="/css/rosgovuk.min.css?1504179566835" media="screen" />
+    <link rel="stylesheet" href="/css/print.min.css?1504179566835" media="print" />
 
     <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
     <!-- never cache patterns -->
@@ -15,8 +15,8 @@
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
 
-<link rel="stylesheet" href="/styleguide/css/styleguide.min.css" media="all">
-<link rel="stylesheet" href="/styleguide/css/prism-typeahead.min.css" media="all" />
+<link rel="stylesheet" href="/styleguide/css/styleguide.min.css?1504179566835" media="all">
+<link rel="stylesheet" href="/styleguide/css/prism-typeahead.min.css?1504179566835" media="all" />
 
     <!-- End Pattern Lab -->
 
@@ -64,7 +64,7 @@
 
 				<input class="button" type="submit" value="Sign in" id="submit">
 
-				<a href="#" id="signin" class="button secondary-btn" role="button">Forgot password?</a>
+				<a href="#" class="button secondary-btn" role="button">Forgot password?</a>
 
 			</form>
 		</div>
@@ -75,13 +75,16 @@
 	<nav role="navigation" aria-labelledby="subsection-title">
 		<ul class="font-xsmall" id="other-services">
 			<li>
-				<a href="/sign-in">Sign in</a>
+				<a href="{{sign_in_url}}">Sign in</a>
 			</li>
 			<li>
 				<a href="{{securities_url}}">Securities</a>
 			</li>
 			<li>
 				<a href="{{discharges_url}}">Discharges</a>
+			</li>
+			<li>
+				<a href="{{dispositions_url}}">Dispositions</a>
 			</li>
 		</ul>
 		<ul class="font-xsmall" id="jwt-results">
@@ -139,7 +142,7 @@
 
   <!--DO NOT REMOVE-->
   <script type="text/json" id="sg-pattern-data-footer" class="sg-pattern-data">
-  {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"assets-default-header","lineagePath":"../../patterns/_assets-headers-default-header/_assets-headers-default-header.html"},{"lineagePattern":"assets-phase-banner","lineagePath":"../../patterns/_assets-components-phase-banner/_assets-components-phase-banner.html"},{"lineagePattern":"assets-h1","lineagePath":"../../patterns/_assets-typography-h1/_assets-typography-h1.html"},{"lineagePattern":"assets-input-text-default","lineagePath":"../../patterns/_assets-forms-input-text-default/_assets-forms-input-text-default.html"},{"lineagePattern":"assets-button-primary","lineagePath":"../../patterns/_assets-forms-button-primary/_assets-forms-button-primary.html"},{"lineagePattern":"assets-button-secondary","lineagePath":"../../patterns/_assets-forms-button-secondary/_assets-forms-button-secondary.html"},{"lineagePattern":"assets-default-footer","lineagePath":"../../patterns/_assets-footer-default-footer/_assets-footer-default-footer.html"}],"lineage":[{"lineagePattern":"assets-default-header","lineagePath":"../../patterns/_assets-headers-default-header/_assets-headers-default-header.html"},{"lineagePattern":"assets-phase-banner","lineagePath":"../../patterns/_assets-components-phase-banner/_assets-components-phase-banner.html"},{"lineagePattern":"assets-h1","lineagePath":"../../patterns/_assets-typography-h1/_assets-typography-h1.html"},{"lineagePattern":"assets-input-text-default","lineagePath":"../../patterns/_assets-forms-input-text-default/_assets-forms-input-text-default.html"},{"lineagePattern":"assets-button-primary","lineagePath":"../../patterns/_assets-forms-button-primary/_assets-forms-button-primary.html"},{"lineagePattern":"assets-button-secondary","lineagePath":"../../patterns/_assets-forms-button-secondary/_assets-forms-button-secondary.html"},{"lineagePattern":"assets-default-footer","lineagePath":"../../patterns/_assets-footer-default-footer/_assets-footer-default-footer.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"pages"},"patternExtension":"mustache","patternName":"Login","patternPartial":"pages-login","patternState":"","patternEngineName":"mustache","extraOutput":{}}
+  {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"assets-default-header","lineagePath":"/patterns/_assets-headers-default-header/_assets-headers-default-header.html"},{"lineagePattern":"assets-phase-banner","lineagePath":"/patterns/_assets-components-phase-banner/_assets-components-phase-banner.html"},{"lineagePattern":"assets-h1","lineagePath":"/patterns/_assets-typography-h1/_assets-typography-h1.html"},{"lineagePattern":"assets-input-text-default","lineagePath":"/patterns/_assets-forms-input-text-default/_assets-forms-input-text-default.html"},{"lineagePattern":"assets-button-primary","lineagePath":"/patterns/_assets-forms-button-primary/_assets-forms-button-primary.html"},{"lineagePattern":"assets-button-secondary","lineagePath":"/patterns/_assets-forms-button-secondary/_assets-forms-button-secondary.html"},{"lineagePattern":"assets-default-footer","lineagePath":"/patterns/_assets-footer-default-footer/_assets-footer-default-footer.html"}],"lineage":[{"lineagePattern":"assets-default-header","lineagePath":"/patterns/_assets-headers-default-header/_assets-headers-default-header.html"},{"lineagePattern":"assets-phase-banner","lineagePath":"/patterns/_assets-components-phase-banner/_assets-components-phase-banner.html"},{"lineagePattern":"assets-h1","lineagePath":"/patterns/_assets-typography-h1/_assets-typography-h1.html"},{"lineagePattern":"assets-input-text-default","lineagePath":"/patterns/_assets-forms-input-text-default/_assets-forms-input-text-default.html"},{"lineagePattern":"assets-button-primary","lineagePath":"/patterns/_assets-forms-button-primary/_assets-forms-button-primary.html"},{"lineagePattern":"assets-button-secondary","lineagePath":"/patterns/_assets-forms-button-secondary/_assets-forms-button-secondary.html"},{"lineagePattern":"assets-default-footer","lineagePath":"/patterns/_assets-footer-default-footer/_assets-footer-default-footer.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"pages"},"patternExtension":"mustache","patternName":"Login","patternPartial":"pages-login","patternState":"","patternEngineName":"mustache","extraOutput":{}}
 </script>
 
 <script>
@@ -175,10 +178,10 @@
   }
 </script>
 
-<script id="pl-js-polyfill-insert-1499077270638">
+<script id="pl-js-polyfill-insert-1504179566835">
   (function() {
     if (self != top) {
-      var cb = '1499077270638';
+      var cb = '1504179566835';
       var js = [];
       if (typeof document !== 'undefined' && !('classList' in document.documentElement)) {
         js.push('styleguide/bower_components/classList.min.js');
@@ -188,10 +191,10 @@
   })();
 </script>
 
-<script id="pl-js-insert-1499077270638">
+<script id="pl-js-insert-1504179566835">
   (function() {
     if (self != top) {
-      var cb = '1499077270638';
+      var cb = '1504179566835';
       var js = [ { 'src': 'styleguide/bower_components/jwerty.min.js', 'dep': [ 'styleguide/js/patternlab-pattern.min.js' ] } ];
       scriptLoader.run(js,cb,'pl-js-insert');
     }
@@ -200,6 +203,7 @@
 
     <script src="/js/govuk.min.js"></script>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
+    <script src="//localhost:35729/livereload.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
 	<script type="text/javascript">

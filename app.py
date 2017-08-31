@@ -39,8 +39,11 @@ def form():
     log.info("Cookie is: " + str(request.cookies))
     log.info("Setting cookie for domain: " + str(COOKIE_DOMAIN))
     return render_template('index.html',
+                           sign_in_url=service_url('sign-in'),
+                           sign_out_url=service_url('sign-out'),
                            discharges_url=service_url('discharges'),
                            securities_url=service_url('securities'),
+                           dispositions_url=service_url('dispositions'),
                            cookie_domain=COOKIE_DOMAIN)
 
 
@@ -142,10 +145,16 @@ def authorise(username):
 
 
 def service_url(service):
-    if service == 'discharges':
+    if service == 'sign-in':
+        return os.getenv("SIGN_IN_URL", "/sign-in")
+    elif service == 'sign-out':
+        return os.getenv("SIGN_OUT_URL", "/sign-out")
+    elif service == 'discharges':
         return os.getenv("DISCHARGES_URL", "/discharges")
     elif service == 'securities':
         return os.getenv("SECURITIES_URL", "/securities")
+    elif service == 'dispositions':
+        return os.getenv("DISPOSITIONS_URL", "/dispositions")
 
 
 def error(message, status_code):
