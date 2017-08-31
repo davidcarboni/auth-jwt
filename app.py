@@ -37,7 +37,7 @@ def default():
 @app.route('/sign-in', methods=['GET'])
 def form():
     log.debug("Current JWT: " + str(request.cookies.get("jwt")))
-    log.debug("Service to redirect to: " + str(request.cookies.get("service")))
+    log.debug("Service to redirect to after login: " + str(request.cookies.get("service")))
     log.debug("Cookie domain is: " + str(COOKIE_DOMAIN))
     return render_template('index.html',
                            sign_in_url=service_url('sign-in'),
@@ -61,21 +61,18 @@ def sign_in():
     form = False
     data = request.get_json()
     if data:
-        log.debug("Json data received.")
+        log.debug("Json data received (API call?).")
     else:
         data = request.form
         if data:
             form = True
-            log.debug("Form data received.")
+            log.debug("Form data received (Login form submitted?).")
 
     # Validate
     username = data.get("username", None)
     password = data.get("password", None)
     if not (username and password):
         log.debug("Request data not found.")
-        print("username=" + str(username))
-        print("password=" + str(password))
-        print(data)
         return error("Please provide username and password values as either a Json message or a form post.", 400)
 
     # Authenticate
@@ -91,7 +88,8 @@ def sign_in():
         # Response
         if form and request.cookies.get('service'):
             service = request.cookies.get('service')
-            response = redirect(service_url(service))
+            url = service_url(service)
+            response = redirect(url)
         else:
             response = jsonify({'jwt': jwt})
         response.set_cookie('jwt', jwt, domain=".ros.9ov.uk")
@@ -107,7 +105,7 @@ def sign_out():
     It's the client's responsibility to dispose of a JWT if it's being stored anywhere other than via the cookie.
     This will clear the cookie and redirect to sign-in.
     """
-    response = redirect("/sign-in")
+    response = redirect(service_url('sign-in'))
     response.set_cookie('jwt', '', expires=0)
     return response
 
@@ -147,15 +145,17 @@ def authorise(username):
 
 def service_url(service):
     if service == 'sign-in':
-        return os.getenv("SIGN_IN_URL", "/sign-in")
+        return os.getenv('SIGN_IN_URL', "/sign-in")
     elif service == 'sign-out':
-        return os.getenv("SIGN_OUT_URL", "/sign-out")
+        return os.getenv('SIGN_OUT_URL', "/sign-out")
     elif service == 'discharges':
-        return os.getenv("DISCHARGES_URL", "/discharges")
+        return os.getenv('DISCHARGES_URL', "/discharges")
     elif service == 'securities':
-        return os.getenv("SECURITIES_URL", "/securities")
+        return os.getenv('SECURITIES_URL', "/securities")
     elif service == 'dispositions':
-        return os.getenv("DISPOSITIONS_URL", "/dispositions")
+        return os.getenv('DISPOSITIONS_URL', "/dispositions")
+    else
+        return "/"
 
 
 def error(message, status_code):

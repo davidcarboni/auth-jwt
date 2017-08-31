@@ -38,7 +38,7 @@ def list_keys():
         result = []
         for found in collection.find():
             result.append(found['key_id'])
-        log.debug("Found keys: " + str(result))
+        log.debug("Found {count} keys.", count=len(result))
         return result
     else:
         return os.listdir(_key_database)
@@ -65,17 +65,15 @@ def get_key(key_id):
 
     if collection:
         found = collection.find_one({'key_id': key_id})
-        log.debug("Found: " + str(found))
         if found:
             return found['public_key']
     else:
         path = os.path.join(_key_database, key_id)
         if os.path.isfile(path):
             with open(path, "r") as public_key_file:
-                log.debug("Reading public key from " + path)
                 key = public_key_file.read()
-                log.debug("Read public key:  " + key)
                 return key
+    log.debug("Key not found: {kid}", kid=key_id)
 
 
 def new_id():
