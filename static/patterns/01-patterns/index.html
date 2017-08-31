@@ -4,8 +4,8 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="../../css/rosgovuk.min.css?1499416453928" media="screen" />
-    <link rel="stylesheet" href="../../css/print.min.css?1499416453928" media="print" />
+    <link rel="stylesheet" href="../../css/rosgovuk.min.css?1504179566835" media="screen" />
+    <link rel="stylesheet" href="../../css/print.min.css?1504179566835" media="print" />
 
     <!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
     <!-- never cache patterns -->
@@ -15,8 +15,8 @@
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
 
-<link rel="stylesheet" href="../../styleguide/css/styleguide.min.css?1499416453928" media="all">
-<link rel="stylesheet" href="../../styleguide/css/prism-typeahead.min.css?1499416453928" media="all" />
+<link rel="stylesheet" href="../../styleguide/css/styleguide.min.css?1504179566835" media="all">
+<link rel="stylesheet" href="../../styleguide/css/prism-typeahead.min.css?1504179566835" media="all" />
 
     <!-- End Pattern Lab -->
 
@@ -266,6 +266,43 @@
   </div>
   <script type="text/json" id="sg-pattern-data-patterns-checkbox-default" class="sg-pattern-data">
     {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"assets-input-checkbox","lineagePath":"../../patterns/_assets-forms-input-checkbox/_assets-forms-input-checkbox.html"}],"lineage":[{"lineagePattern":"assets-input-checkbox","lineagePath":"../../patterns/_assets-forms-input-checkbox/_assets-forms-input-checkbox.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"patterns","patternSubtype":"forms"},"patternExtension":"mustache","patternName":"Checkbox Default","patternPartial":"patterns-checkbox-default","patternState":"","patternEngineName":"mustache","extraOutput":{}}
+  </script>
+</div><!--end .sg-pattern-->
+<div id="patterns-date" class="sg-pattern">
+  <div class="sg-pattern-head">
+    <h3 class="sg-pattern-title">
+      <a href="../../patterns/01-patterns-forms-date&#x2F;01-patterns-forms-date.html" class="patternLink" data-patternpartial="patterns-date" title="Link to Pattern">
+          Date
+      </a>
+    </h3>
+    <div class="sg-pattern-breadcrumb"></div>
+    <a href="#" data-patternpartial="patterns-date" title="View Pattern Info" id="sg-pattern-extra-toggle-patterns-date" class="sg-pattern-extra-toggle"><span>&#9660;</span></a>
+  </div>
+  <div class="sg-pattern-extra" id="sg-pattern-extra-patterns-date">
+    
+  </div>
+  <div class="sg-pattern-example">
+    <fieldset>
+  <legend>
+    <span class="form-label-bold">What is your date of birth</span> <span class="form-hint">For example, 31 3 1980</span>
+</legend>
+
+  <div class="form-date">
+    <div class="form-group form-group-month">
+      <label class="form-label" for="dob-month">Month</label>
+      <input class="form-control" id="dob-month" name="dob-month" type="number" pattern="[0-9]*" min="0" max="12">
+    </div>
+    <div class="form-group form-group-year">
+      <label class="form-label" for="dob-year">Year</label>
+      <input class="form-control" id="dob-year" name="dob-year" type="number" pattern="[0-9]*" min="0" max="2016">
+    </div>
+  </div>
+</fieldset>
+
+
+  </div>
+  <script type="text/json" id="sg-pattern-data-patterns-date" class="sg-pattern-data">
+    {"cssEnabled":false,"patternLineageExists":true,"patternLineages":[{"lineagePattern":"assets-date","lineagePath":"../../patterns/_assets-forms-date/_assets-forms-date.html"}],"lineage":[{"lineagePattern":"assets-date","lineagePath":"../../patterns/_assets-forms-date/_assets-forms-date.html"}],"patternLineageRExists":false,"patternLineagesR":[],"lineageR":[],"patternLineageEExists":true,"patternDesc":"","patternBreadcrumb":{"patternType":"patterns","patternSubtype":"forms"},"patternExtension":"mustache","patternName":"Date","patternPartial":"patterns-date","patternState":"","patternEngineName":"mustache","extraOutput":{}}
   </script>
 </div><!--end .sg-pattern-->
 <div id="patterns-drop-list" class="sg-pattern">
@@ -1086,10 +1123,10 @@
   }
 </script>
 
-<script id="pl-js-polyfill-insert-1499416453928">
+<script id="pl-js-polyfill-insert-1504179566835">
   (function() {
     if (self != top) {
-      var cb = '1499416453928';
+      var cb = '1504179566835';
       var js = [];
       if (typeof document !== 'undefined' && !('classList' in document.documentElement)) {
         js.push('styleguide/bower_components/classList.min.js');
@@ -1099,10 +1136,10 @@
   })();
 </script>
 
-<script id="pl-js-insert-1499416453928">
+<script id="pl-js-insert-1504179566835">
   (function() {
     if (self != top) {
-      var cb = '1499416453928';
+      var cb = '1504179566835';
       var js = [ { 'src': 'styleguide/bower_components/jwerty.min.js', 'dep': [ 'styleguide/js/patternlab-pattern.min.js' ] } ];
       scriptLoader.run(js,cb,'pl-js-insert');
     }
@@ -1111,5 +1148,6 @@
 
     <script src="../../js/govuk.min.js"></script>
     <script>if (typeof window.GOVUK === 'undefined') document.body.className = document.body.className.replace('js-enabled', '');</script>
+    <script src="//localhost:35729/livereload.js"></script>
   </body>
 </html>
