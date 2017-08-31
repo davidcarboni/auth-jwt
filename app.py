@@ -154,7 +154,7 @@ def service_url(service):
         return os.getenv('SECURITIES_URL', "/securities")
     elif service == 'dispositions':
         return os.getenv('DISPOSITIONS_URL', "/dispositions")
-    else
+    else:
         return "/"
 
 
