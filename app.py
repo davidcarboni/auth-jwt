@@ -1,8 +1,10 @@
-import os
 import logging
-import sleuth
 import b3
+import sleuth
+import os
+
 from flask import Flask, request, redirect, jsonify, render_template
+
 from src.token import sign
 from src.database import list_keys, get_key
 
@@ -15,15 +17,13 @@ COOKIE_DOMAIN = os.getenv('COOKIE_DOMAIN', None)
 
 # Logging
 
-logging_level = logging.DEBUG if debug else logging.WARNING
-logging.basicConfig(level=logging_level)
+logging.getLogger().setLevel(logging.DEBUG if debug else logging.WARNING)
 log = logging.getLogger(__name__)
 
 
 # App
 
 app = Flask("auth", static_folder='static', static_url_path='')
-
 app.before_request(b3.start_span)
 app.after_request(b3.end_span)
 
@@ -36,8 +36,9 @@ def default():
 
 @app.route('/sign-in', methods=['GET'])
 def form():
-    log.info("Cookie is: " + str(request.cookies))
-    log.info("Setting cookie for domain: " + str(COOKIE_DOMAIN))
+    log.debug("Current JWT: " + str(request.cookies.get("jwt")))
+    log.debug("Service to redirect to: " + str(request.cookies.get("service")))
+    log.debug("Cookie domain is: " + str(COOKIE_DOMAIN))
     return render_template('index.html',
                            sign_in_url=service_url('sign-in'),
                            sign_out_url=service_url('sign-out'),
