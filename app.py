@@ -103,7 +103,7 @@ def sign_in():
 def sign_out():
     """
     User sign-out.
-    It's the client's responsibility to dispose of a JWT if it's being stored anywhere other than via the cookie.
+    It's the client's responsibility to dispose of a JWT if it's being stored anywhere other than the cookie.
     This will clear the cookie and redirect to sign-in.
     """
     response = redirect(service_url('sign-in'))
