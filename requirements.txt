@@ -1,7 +1,7 @@
 Flask==1.0.2
 Flask-B3
 Flask-Sleuth
-pyjwt==1.7.1
+pyjwt==2.5.0
 cryptography==3.4.7
 pymongo==3.7.2
 gunicorn==19.9.0
