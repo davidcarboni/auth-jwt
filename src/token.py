@@ -18,7 +18,7 @@ def sign(data):
         'iss': 'auth',
         'kid': key_id()
     }
-    return jwt.encode(data, private_key(), algorithm='ES256', headers=headers).decode("UTF8")
+    return jwt.encode(data, private_key(), algorithm='ES256', headers=headers)
 
 
 def decode(token):

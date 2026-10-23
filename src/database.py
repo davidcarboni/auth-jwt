@@ -34,7 +34,7 @@ else:
 def list_keys():
     log.debug("Listing public keys")
 
-    if collection:
+    if collection is not None:
         result = []
         for found in collection.find():
             result.append(found['key_id'])
@@ -47,7 +47,7 @@ def list_keys():
 def add_key(public_key):
     key_id = new_id()
 
-    if collection:
+    if collection is not None:
         mongo_id = collection.insert_one({'key_id': key_id, 'public_key': public_key}).inserted_id
         log.debug("Inserted ID is " + str(mongo_id))
     else:
@@ -63,7 +63,7 @@ def add_key(public_key):
 
 def get_key(key_id):
 
-    if collection:
+    if collection is not None:
         found = collection.find_one({'key_id': key_id})
         if found:
             return found['public_key']

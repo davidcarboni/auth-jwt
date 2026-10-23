@@ -59,7 +59,7 @@ def sign_in():
 
     # Retrieve the submitted data
     form = False
-    data = request.get_json()
+    data = request.get_json(silent=True)
     if data:
         log.debug("Json data received (API call?).")
     else:
